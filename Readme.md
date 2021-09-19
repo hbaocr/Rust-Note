@@ -9,6 +9,11 @@
 * Uninstall `crate` (the dependencies lib like `npm`) : `cargo uninstall <lib name>`
 * All needed dependencies info are added in `Cargo.toml` like `package.json` in Nodejs
 * The version of needed dependencies info are locked in `Cargo.lock` like `package-lock.json` in Nodejs
+* If we want to build a release, we simply run the following command: `cargo build --release`
+* The `comment` in rust support `markdown` syntax when generate the document automatically
+    * The markdown syntax  is use after `///` ( 3 slash marker)
+    * Run `cargo doc` to gen all the markdown comment in the source code
+    * Run `cargo doc --open`  to open the generated doc
 
 ## 2. String type `str`,`&str` and `String` and `&String`
 * [web.mit.edu/rust-lang_v1.25](http://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/book/first-edition/strings.html)
@@ -65,12 +70,12 @@
     * `Variables and arguments cannot have dynamically sized types`.
     * Only the last field in a struct may have a dynamically sized type; the other fields must not. Enum variants must not have dynamically sized types as data.
 
-## Object Type:
+## 3. Object Type:
 ### Struct
 * Declare `Struct Hello{ num1:i8,num2:i8,st:String};`
 * We can use struct as the same as `Class` in C by `impl` more method for `Struct`
     * `impl Hello{ fn method1(){} .....}`
-* `self` === `this` in CPP or `self` on Python
+* `self` === `this` in CPP or `self` in Python
 
 ### Enum
 
@@ -80,5 +85,42 @@
 
 ### Interface:
 
-* The interface can be implemented using `trait`
+* The class interface methodology can be implemented using `trait` impl for `struct`
+```rust
+struct StructEx{
+    var1:i8,
+    var2:i8
+}
+trait TraitName{
+    fn interface_trait_method(&self){
+        // do sth here
+    }
+}
+// apply trait for struct ==> sothat "StructEx" can use the "interface_trait_method" in trait
+impl TraitName for StructEx{}
+```
 
+## 4. Metaprogramming with macros
+
+* Metaprogramming can generally be described as a way in which the program can manipulate itself based on certain instructions
+* `Derive macros` can be analogous to `decorators in JavaScript and Python`. They sit `on top` of a `function` or `struct` and change its functionality
+    * `#[derive(Clone, Copy)]` macro on top of `struct Coordinate`  to implement the trait `Clone` and `Copy` on `Struct Coordinate` so that `Coordinate` can use these trait to copy and clone the object.
+        * Note that: if the Object struct implement trait `Clone` and `Copy`, we pass it through the functions it will copy this object struct to use inside these functions like the `primitive` type (`i8`,`u8`,...) instead fo take `ownership` of it.
+        ```rust
+        #[derive(Clone, Copy)]
+        struct Coordinate {
+            x: i8,
+            y: i8
+        }
+        ```
+    * `#[derive(Serialize, Deserialize)]` macro on top of `struct Coordinate`  to implement the trait `Serialize` and `Deserialize` on `Struct Coordinate` so that we can pass coordinate into the `crate's functions` to `serialize` into JSON, and then `deserialize`.  
+    
+        ```rust
+        use serde::{Serialize, Deserialize};
+        #[derive(Serialize, Deserialize)]
+        struct Coordinate {
+            x: i8,
+            y: i8
+        }
+        ```
+* wwe
