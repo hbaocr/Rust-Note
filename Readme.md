@@ -241,4 +241,15 @@ fn main(){
         println!("pub_nest_mod::priv_fun can not call");
     }
     ```
- 
+
+* Note that, you can use `mod` to load the module then use `use` to load function or module in side the loaded module by `mod` 
+```rust
+// main.rs
+mod my_module; // declare my_module first
+use my_module::pub_fun_in_mymodule; // use to load the mod/fn inside declared my_module
+fn main() {
+    println!("Hello, world!");
+    pub_fun_in_mymodule();// call without my_module::pub_fun_in_mymodule()
+    my_module::public_nest_mod::pub_fun();
+}
+```
