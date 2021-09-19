@@ -70,10 +70,15 @@
 * Declare `Struct Hello{ num1:i8,num2:i8,st:String};`
 * We can use struct as the same as `Class` in C by `impl` more method for `Struct`
     * `impl Hello{ fn method1(){} .....}`
-* `self` === `this` in CPP
+* `self` === `this` in CPP or `self` on Python
 
 ### Enum
 
 * Declare `Enum EnumExp{ S(String) , I(i8)};`
 * We can  also use `impl`to  implement method for `Enum`
-* `self` === `this` in CPP
+* `self` === `this` in CPP or `self` in Python
+
+### Interface:
+
+* The interface can be implemented using `trait`
+
