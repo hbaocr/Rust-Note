@@ -123,4 +123,122 @@ impl TraitName for StructEx{}
             y: i8
         }
         ```
-* wwe
+## 5. Modules 
+
+### Module : `mod`
+A module is a collection of items: `functions`, `structs`, `traits`, `impl` blocks, and even other `modules`.
+* Items in modules default to `private` visibility.
+* Use the `pub` modifier to override default visibility.
+* [link](https://doc.rust-lang.org/rust-by-example/mod/struct_visibility.html)
+
+```rust
+mod module_name{
+    // default is private, only be called in this mod
+    fn priv_fn(){
+        println!{"priv_fn"}
+    }
+    // public function can be call outside 
+    pub fn pub_fn(){
+        println!{"pub_fn"} 
+    }
+    // pub(crate) makes functions visible only within the current crate
+    pub(crate) fn public_function_in_crate() {
+        println!("called `my_mod::public_function_in_crate()`");
+    }
+    // pub nest module
+    pub mod nest_mod{
+        pub fn pub_fn_in_nest_mod(){
+            println!{"pub_fn"} 
+        }
+        // We can also use `self` to access  inside this module
+        pub fn test_self(){
+            self::pub_fn_in_nest_mod()
+        }
+        // The `super` keyword refers to the parent scope of nest_mod 
+        pub fn test_super(){
+            super::pub_fn();
+        }
+    }
+}
+
+fn main(){
+    module_name::pub_fn();
+    module_name::public_function_in_crate();
+    module_name::nest_mod::pub_fn_in_nest_mod();
+    module_name::nest_mod::test_self();
+    module_name::nest_mod::test_super();
+}
+```
+
+### File Hierachy
+
+`Modules` can be `mapped` to a `file/directory` hierarchy. Call `tree .` to list the Hierachy. Here is the structure of the project
+```
+.
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   ├── main.rs                  ---> main app src: include `mod my_module` 
+│   └── my_module                ---> folder name is module name
+│       ├── mod.rs               ---> this is the entry point of my_module
+│       ├── private_nest_mod.rs  ---> nest module, declared as priv module
+│       └── public_nest_mod.rs   ---> nest module, declared as pub module
+```
+
+* To create your own module named `my_module`:
+    * 1. Create folder which name is the name of your module :  `my_module`
+    * 2. Create `my_module/mod.rs`  as the entry point of your lib `my_module`.
+    * 3. Write your own code in `my_module/mod.rs`: you can declare your public/private function or public/private module in this file or in separated file. Each file as the `nest module` of `my_module`
+    * 4. To use `my_module` in `main.rs` declare `mod my_module`. This will let the `main.rs` use all the `public function and nest module` declaring in `my_module/mod.rs`
+
+* `main.rs`:
+    ```rust
+    mod my_module; // include my_module
+    fn main() {
+        println!("Hello, world!");
+        my_module::pub_fun_in_mymodule();
+        my_module::public_nest_mod::pub_fun();
+    }
+    ```
+* `my_module/mod.rs`:
+    ```rust
+    //mod.rs is the entry point of your own module.
+    mod private_nest_mod; // this only use inside my_module.Can not be called outside ( in main.rs)
+    pub mod public_nest_mod;//Can be called outside ( in main.rs)
+
+    //Can be called outside ( in main.rs)
+    pub fn pub_fun_in_mymodule(){
+        println!("pub_fun_in_mylib");
+        private_nest_mod::pub_fun();
+        public_nest_mod::pub_fun();
+    }
+
+    // default is private fn. It can Only be called inside this mod.rs
+    fn private_fun_in_mymodule(){
+        println!("private_fun_in_mylib can not call out side")
+    }
+    ```
+* `my_module/private_nest_mod.rs`: this file is declared as private module in `mod.rs`
+    ```rust
+    // can call outside : in mod.rs
+    pub fn pub_fun() {
+        println!("private_nest_mod::pub_fun");
+    }
+    // only can call on this file
+    fn priv_fun() {
+        println!("private_nest_mod::priv_fun can not call");
+    }
+    ```
+ 
+* `my_module/pub_nest_mod.rs`: this file is declared as public module in `mod.rs`
+    ```rust
+    // can call outside : in mod.rs
+    pub fn pub_fun() {
+        println!("pub_nest_mod::pub_fun");
+    }
+    // only can call on this file
+    fn priv_fun() {
+        println!("pub_nest_mod::priv_fun can not call");
+    }
+    ```
+ 
