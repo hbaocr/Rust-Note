@@ -5,11 +5,19 @@
     * Run Project: `cd Helloword` then `cargo run`
 
 * `let` can only be used in function  
+
 * Install `crate` (the dependencies lib like `npm`) : `cargo install <lib name>`
+
 * Uninstall `crate` (the dependencies lib like `npm`) : `cargo uninstall <lib name>`
+
 * All needed dependencies info are added in `Cargo.toml` like `package.json` in Nodejs
+
 * The version of needed dependencies info are locked in `Cargo.lock` like `package-lock.json` in Nodejs
+
 * If we want to build a release, we simply run the following command: `cargo build --release`
+
+* Create a project lib : `cargo new <lib_name> --lib`
+
 * The `comment` in rust support `markdown` syntax when generate the document automatically
     * The markdown syntax  is use after `///` ( 3 slash marker)
     * Run `cargo doc` to gen all the markdown comment in the source code
@@ -136,13 +144,20 @@ impl TraitName for StructEx{}
         ```
     * This `#[route] attribute` would be defined by the framework as a procedural macro. The signature of the macro definition function would look like this:
         ```rust
+        // using #[proc_macro_attribute] to declare an attribute like procedural macro
+
         #[proc_macro_attribute]
         pub fn route(attr: TokenStream, item: TokenStream) -> TokenStream {}
         ```
     * Here, we have two parameters of type `TokenStream`. The first is for the contents of the attribute: the `GET, "/"` part. The second is the body of the item the attribute is attached to: in this case, `fn index(){}` and the rest of the function’s body.
 
     * Other than that, attribute-like macros work the same way as `custom derive macros`: you create a crate with the proc-macro crate type and implement a function that generates the code you want!
-    * **Note :** `#[some_name]` is an attribute that can be applied to `any Rust item` (and in the future, even Rust expressions and statements (and maybe even types and patterns)), including functions. It applies the procedural macro some_name to the source code that makes the item definition. That input source code `is not re-emitted, so the attribute macro has all the power to decide what gets emitted instead.`
+    * **Note :** `#[some_name]` is an attribute that can be applied to `any Rust item` (and in the future, even Rust expressions and statements (and maybe even types and patterns)), including functions. It applies the **procedural macro** some_name to the source code that makes the item definition. That input source code `is not re-emitted, so the attribute macro has all the power to decide what gets emitted instead.` It takes arbitrary input and `returns valid Rust code`. There are 3 type of `procedural macros`
+        * Attribute-like macros
+        * Derive macros
+        * Function-like macros
+
+* See more [macro example](https://blog.logrocket.com/macros-in-rust-a-tutorial-with-examples/) and [procedural macros](https://blog.logrocket.com/procedural-macros-in-rust/)
 
 
 
