@@ -103,8 +103,10 @@ impl TraitName for StructEx{}
 ## 4. Metaprogramming with macros
 
 * Metaprogramming can generally be described as a way in which the program can manipulate itself based on certain instructions
-* `Derive macros` can be analogous to `decorators in JavaScript and Python`. They sit `on top` of a `function` or `struct` and change its functionality
-    * `#[derive(Clone, Copy)]` macro on top of `struct Coordinate`  to implement the trait `Clone` and `Copy` on `Struct Coordinate` so that `Coordinate` can use these trait to copy and clone the object.
+
+
+* [Derive macros](https://doc.rust-lang.org/rust-by-example/trait/derive.html) can be analogous to `decorators in JavaScript and Python`. They sit `on top` of `structs`, `enums` an `union` and change its functionality
+    * `#[derive(Clone, Copy)]` macro on top of `struct Coordinate`  to implement the trait `Clone` and `Copy` on `Struct Coordinate` so that `Coordinate` can use these trait to copy and clone the object. 
         * Note that: if the Object struct implement trait `Clone` and `Copy`, we pass it through the functions it will copy this object struct to use inside these functions like the `primitive` type (`i8`,`u8`,...) instead fo take `ownership` of it.
         ```rust
         #[derive(Clone, Copy)]
@@ -123,6 +125,27 @@ impl TraitName for StructEx{}
             y: i8
         }
         ```
+    * **Note** : `derive` only works for `structs`, `enums` an `union` type definitions and it then applies the `SomeName` procedural macro (called a derive macro) to the source code that makes the type definition. The macro can then output / spit / emit its own forged source code, **that will be emitted next to the original type definition source, which remains unaffected by the macro**
+
+* [Attribute like macro](https://doc.rust-lang.org/book/ch19-06-macros.html#attribute-like-macros) are similar to c`ustom derive macros`, but instead of generating code for the derive attribute, they allow you to `create new attributes`. They’re also more flexible: **derive only works for structs and enums** however **attributes can be applied to other items as well, such as functions**.
+
+    * `#[route(GET, "/")]` is attribute named route that annotates functions when using a web application framework
+        ```rust
+        #[route(GET, "/")]
+        fn index() {}
+        ```
+    * This `#[route] attribute` would be defined by the framework as a procedural macro. The signature of the macro definition function would look like this:
+        ```rust
+        #[proc_macro_attribute]
+        pub fn route(attr: TokenStream, item: TokenStream) -> TokenStream {}
+        ```
+    * Here, we have two parameters of type `TokenStream`. The first is for the contents of the attribute: the `GET, "/"` part. The second is the body of the item the attribute is attached to: in this case, `fn index(){}` and the rest of the function’s body.
+
+    * Other than that, attribute-like macros work the same way as `custom derive macros`: you create a crate with the proc-macro crate type and implement a function that generates the code you want!
+    * **Note :** `#[some_name]` is an attribute that can be applied to `any Rust item` (and in the future, even Rust expressions and statements (and maybe even types and patterns)), including functions. It applies the procedural macro some_name to the source code that makes the item definition. That input source code `is not re-emitted, so the attribute macro has all the power to decide what gets emitted instead.`
+
+
+
 ## 5. Modules 
 
 ### Module : `mod`
