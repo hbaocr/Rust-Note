@@ -179,13 +179,16 @@ fn main(){
 ├── Cargo.toml
 ├── src
 │   ├── main.rs                  ---> main app src: include `mod my_module` 
+│   ├── my_single_file_mod.rs    ---> single file mod, is used when declaring by mod my_single_file_mod in main.rs
 │   └── my_module                ---> folder name is module name
 │       ├── mod.rs               ---> this is the entry point of my_module
-│       ├── private_nest_mod.rs  ---> nest module, declared as priv module
-│       └── public_nest_mod.rs   ---> nest module, declared as pub module
+│       ├── private_nest_mod.rs  ---> nest module, declared as priv module in mod.rs
+│       └── public_nest_mod.rs   ---> nest module, declared as pub module in mod.rs
 ```
-
-* To create your own module named `my_module`:
+* To create your own module as the single file:
+    * 1. create my_single_file_mod.rs
+    * 2. import then use by `mod my_single_file_mod` in `main.rs`
+* To create your own module as the folder named `my_module`:
     * 1. Create folder which name is the name of your module :  `my_module`
     * 2. Create `my_module/mod.rs`  as the entry point of your lib `my_module`.
     * 3. Write your own code in `my_module/mod.rs`: you can declare your public/private function or public/private module in this file or in separated file. Each file as the `nest module` of `my_module`
@@ -193,11 +196,18 @@ fn main(){
 
 * `main.rs`:
     ```rust
-    mod my_module; // include my_module
+    mod my_module; // include my_module as folder
+    mod my_single_file_mod; // include  single file module
     fn main() {
-        println!("Hello, world!");
+        my_single_file_mod::pub_single_file_fn();
         my_module::pub_fun_in_mymodule();
         my_module::public_nest_mod::pub_fun();
+    }
+    ```
+* `my_single_file_mod.rs`:
+    ```rust
+    pub fn pub_single_file_fn(){
+        println!("pub_single_file_fn")
     }
     ```
 * `my_module/mod.rs`:
